@@ -1,0 +1,35 @@
+{
+  "name": "dreamcast-game-helper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/main.js",
+   "dependencies": {
+    "apicache": "latest",
+    "bootstrap": "latest",
+    "express": "latest",
+    "mysql": "latest"
+  },
+  "devDependencies": {
+    "eslint": "latest",
+    "less": "latest",
+    "less-plugin-clean-css": "latest",
+    "browserify": "latest",
+    "babili": "latest",
+    "http-server": "latest"
+  },
+  "scripts": {
+    "lint": "eslint -c ./.eslintrc.json app/src/js/** && eslint -c ./.eslintrc.json server/**",
+    "html": "mkdir -p dist && cp app/src/index.html dist/",
+    "css": "mkdir -p dist/style && lessc app/src/style/style.less dist/style/style.css && lessc --clean-css dist/style/style.css dist/style/style.min.css && rm dist/style/style.css",
+    "bootstrap": "cp node_modules/bootstrap/dist/js/bootstrap.min.js dist/js && cp node_modules/bootstrap/dist/css/bootstrap.min.css dist/style",
+    "js": "mkdir -p dist/js && browserify app/src/js/Main.js > dist/js/main.js",
+    "img": "echo '=> copying the assets' && mkdir -p dist/img && cp app/images/* dist/img/",
+    "minify": "babili dist/js/main.js > dist/js/main.min.js && rm dist/js/main.js && mv dist/js/main.min.js dist/js/main.js",
+    "build": "npm run lint && npm run html && npm run css && npm run js && npm run bootstrap && npm run img",
+    "clean": "rm -rf node_modules && rm -rf dist",
+    "start": "http-server dist/",
+    "start-api": "node server/main.js"
+  },
+  "author": "Marc Hein",
+  "license": "ISC"
+}
