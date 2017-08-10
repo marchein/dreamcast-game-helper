@@ -27,7 +27,7 @@
     "minify": "babili dist/js/main.js > dist/js/main.min.js && rm dist/js/main.js && mv dist/js/main.min.js dist/js/main.js",
     "build": "npm run lint && npm run html && npm run css && npm run js && npm run bootstrap && npm run img",
     "clean": "rm -rf node_modules && rm -rf dist",
-    "production": "mv dist/* ~/web/dreamcast.xnmn.de/",
+    "production": "mv dist/* /var/www/virtual/xanatori/dreamcast.xnmn.de/",
     "start": "node server/main.js",
     "start-server": "http-server dist/"
   },
