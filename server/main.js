@@ -14,49 +14,55 @@ let palgames = [];
 
 server.use(cache("2 weeks"));
 
-server.get("/", function (req, res) {
+//server.use(express.static("dist"));
+
+// eslint-disable-next-line
+var router = express.Router(); // init the url for the api
+server.use("/api", router);
+
+router.get("/", function (req, res) {
 	let header = "<h1>Dreamcast Games API</h1>\n";
 	let commands = "<ul>\n\t<li>/getAllGames - shows all games from all regions</li>\n\t<li>/getjapangames - shows all games from the NTSC-J region</li>\n\t<li>/getjapangames/:players - shows all games from the NTSC-J region for ':players' players</li>\n\t<li>/getusgames - shows all games from the NTSC-U region</li>\n\t<li>/getusgames/:players - shows all games from the NTSC-U region for ':players' players</li>\n\t<li>/getpalgames - shows all games from the PAL region</li>\n\t<li>/getpalgames/:players - shows all games from the PAL region for ':players' players</li>\n</ul>";
 	let usage = "<h2>Usage:</h2>\n" + commands;
 	res.send(header + usage);
 });
 
-server.get("/getallgames", function (req, res) {
+router.get("/getallgames", function (req, res) {
 	var json = JSON.stringify(allgames);
 	res.send(json);
 });
 
-server.get("/getallgames/:players", function (req, res) {
+router.get("/getallgames/:players", function (req, res) {
 	let players = req.params.players;
 	res.send(getNPlayerGames(allgames, players));
 });
 
-server.get("/getjapangames", function (req, res) {
+router.get("/getjapangames", function (req, res) {
 	var json = JSON.stringify(japangames);
 	res.send(json);
 });
 
-server.get("/getjapangames/:players", function (req, res) {
+router.get("/getjapangames/:players", function (req, res) {
 	let players = req.params.players;
 	res.send(getNPlayerGames(japangames, players));
 });
 
-server.get("/getusgames", function (req, res) {
+router.get("/getusgames", function (req, res) {
 	var json = JSON.stringify(usgames);
 	res.send(json);
 });
 
-server.get("/getusgames/:players", function (req, res) {
+router.get("/getusgames/:players", function (req, res) {
 	let players = req.params.players;
 	res.send(getNPlayerGames(usgames, players));
 });
 
-server.get("/getpalgames", function (req, res) {
+router.get("/getpalgames", function (req, res) {
 	var json = JSON.stringify(palgames);
 	res.send(json);
 });
 
-server.get("/getpalgames/:players", function (req, res) {
+router.get("/getpalgames/:players", function (req, res) {
 	let players = req.params.players;
 	res.send(getNPlayerGames(palgames, players));
 });
