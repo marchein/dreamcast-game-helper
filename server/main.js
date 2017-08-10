@@ -1,7 +1,7 @@
 var config = require("./config");
 var express = require("express");
 var server = express();
-let expressPort = 80;
+let expressPort = config.port;
 const mysql = require("mysql");
 var apicache = require("apicache");
 var cache = apicache.middleware;
@@ -13,6 +13,7 @@ let usgames = [];
 let palgames = [];
 
 server.use(express.static("dist"));
+server.use(cache("2 weeks"));
 
 // eslint-disable-next-line
 var router = express.Router(); // init the url for the api

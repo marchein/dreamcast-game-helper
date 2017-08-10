@@ -4,6 +4,15 @@ let buttonRow;
 let region = "all";
 let players = -1;
 
+let currentFirstItem = 0;
+let currentPage = 1;
+let totalPages = 1;
+
+let currentGames = [];
+let maxItemsOnCurrentPage = 50;
+
+let apiURL = "http://dreamcast.xnmn.de/api/";
+
 function xhrSuccess() {
 	this.callback.apply(this, this.arguments);
 }
@@ -22,8 +31,43 @@ function loadFile(sURL, fCallback) {
 	oReq.send(null);
 }
 
+function setControls() {
+	totalPages = Math.ceil(currentGames.length / maxItemsOnCurrentPage); // max pages
+
+	let pages = document.getElementById("pages");
+	pages.innerHTML = currentPage + "/" + totalPages;
+	setCurrentPage(); // aktuelle seite wird gesetzt
+}
+
+function setCurrentPage() {
+	if (currentPage === 1) {
+		currentFirstItem = 0; // wenn seite === 1, erstes item -> id = 0
+	}
+	else {
+		currentFirstItem = (currentPage - 1) * maxItemsOnCurrentPage; // sonst (aktuelle seite - 1) * maximale items auf aktueller seite
+	}
+
+	for (let i = currentFirstItem; i < (currentFirstItem + maxItemsOnCurrentPage); i++) {
+		if (currentGames[i] !== undefined) {
+			// implement add single game only
+		}
+	}
+}
+
+function backPage() {
+	if (currentPage > 1) { // kleinste mögliche seite === 1
+		currentPage--; // falls seite > 1, runterzählen
+	}
+}
+
+function nextPage() {
+	if (currentPage < totalPages) { // größte mögliche seite === maxPages
+		currentPage++; // falls seite < maxPages, runterzählen
+	}
+}
+
 function init() {
-	loadFile("http://localhost/api/getallgames", initGames);
+	loadFile(apiURL + "getallgames", initGames);
 }
 
 function resetTable() {
@@ -31,9 +75,9 @@ function resetTable() {
 }
 
 function initGames() {
-	let allGames = JSON.parse(this.responseText); // json antwort von der api parsen und in array laden
-	for (let i = 0; i < allGames.length; i++) {
-		let currentGame = allGames[i];
+	currentGames = JSON.parse(this.responseText); // json antwort von der api parsen und in array laden
+	for (let i = 0; i < currentGames.length; i++) {
+		let currentGame = currentGames[i];
 		let row = tableBody.insertRow(i);
 		var title = row.insertCell(0);
 		title.innerHTML = currentGame.title;
@@ -46,14 +90,14 @@ function initGames() {
 			players.innerHTML = "1";
 		}
 		else {
-			players.innerHTML =  currentGame.players.min + "-" + currentGame.players.max;
+			players.innerHTML = currentGame.players.min + "-" + currentGame.players.max;
 		}
 	}
 }
 
 function initRegionButtons() {
 	let regionButtonDiv = document.createElement("div");
-	regionButtonDiv.classList = "btn-group col-md-6";	
+	regionButtonDiv.classList = "btn-group col-md-6";
 	buttonRow.appendChild(regionButtonDiv);
 
 	let regionButton = document.createElement("button");
@@ -121,7 +165,7 @@ function initRegionButtons() {
 
 function initPlayerButtons() {
 	let playerButtonDiv = document.createElement("div");
-	playerButtonDiv.classList = "btn-group col-md-6";	
+	playerButtonDiv.classList = "btn-group col-md-6";
 	buttonRow.appendChild(playerButtonDiv);
 
 	let playerButton = document.createElement("button");
@@ -183,12 +227,12 @@ function onRegionClick(gameRegion) {
 		default:
 			url = "getallgames";
 			break;
-	};
+	}
 	if (players !== -1) {
 		url += "/" + players;
 	}
 	console.log(url);
-	loadFile("http://localhost/api/" + url, initGames);
+	loadFile(apiURL + url, initGames);
 }
 
 function onPlayerClick(newPlayers) {
@@ -209,14 +253,14 @@ function onPlayerClick(newPlayers) {
 		default:
 			url = "getAllGames";
 			break;
-	};
+	}
 	if (newPlayers !== -1) {
-		if(newPlayers !== "all") {
+		if (newPlayers !== "all") {
 			url += "/" + newPlayers;
 		}
 	}
 	console.log(url);
-	loadFile("http://localhost/api/" + url, initGames);
+	loadFile(apiURL + url, initGames);
 }
 
 function setUpPage() {
