@@ -11,7 +11,7 @@ let totalPages = 1;
 let currentGames = [];
 let maxItemsOnCurrentPage = 50;
 
-let apiURL = "http://dreamcast.xnmn.de/api/";
+let apiURL = "https://dreamcast.xnmn.de/api/";
 
 function xhrSuccess() {
 	this.callback.apply(this, this.arguments);
